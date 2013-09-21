@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<endpoints version="2.0" xmlns="http://java.sun.com/xml/ns/jax-ws/ri/runtime">
+  <endpoint implementation="sorteGrande.teste" name="teste" url-pattern="/teste"/>
+  <endpoint implementation="sorteGrande.WS_SorteGrande" name="WS_SorteGrande" url-pattern="/WS_SorteGrande"/>
+</endpoints>
