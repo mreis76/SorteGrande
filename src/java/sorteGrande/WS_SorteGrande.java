@@ -8,11 +8,16 @@
  */
 package sorteGrande;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Arrays;
 import javax.jws.WebService;
 
 @WebService(serviceName = "WS_SorteGrande")
 public class WS_SorteGrande {
+
+    private Conexao con;
 
     private boolean existeElemento(int v[], int elemento) {
         for (int i = 0; i < v.length; i++) {
@@ -21,6 +26,41 @@ public class WS_SorteGrande {
             }
         }
         return false;
+    }
+
+    public String[] getResultado(String tipo, int quantos) {
+        String[] retorno = new String[quantos];
+        try {
+
+            int count = 0;
+            con.iniciarConexao();
+            Statement stm = con.getConnection().createStatement();
+            ResultSet rs = stm.executeQuery("SELECT * FROM resultados WHERE TIPO = " + tipo + " ORDER BY id desc");
+
+            while (rs.next()) {
+                if (count < quantos) {
+                    if (tipo.equals("M")) {
+                        retorno[count] = String.format("%d, %d, %d, %d, %d, %d",
+                                rs.getInt("num1"), rs.getInt("num2"),
+                                rs.getInt("num3"), rs.getInt("num4"),
+                                rs.getInt("num5"), rs.getInt("num6"));
+                    } else if (tipo.equals("Q")) {
+                        retorno[count] = String.format("%d, %d, %d, %d, %d",
+                                rs.getInt("num1"), rs.getInt("num2"),
+                                rs.getInt("num3"), rs.getInt("num4"),
+                                rs.getInt("num5"));
+                    }
+                    count++;
+
+                } else {
+                    break;
+                }
+            }
+            con.fecharConexao();
+        } catch (SQLException ex) {
+            return null;
+        }
+        return retorno;
     }
 
     public String quina(int qtNumeros) {
